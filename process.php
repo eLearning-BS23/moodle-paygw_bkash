@@ -26,12 +26,12 @@
 use core_payment\helper;
 use paygw_bkash\bkash_helper;
 
-global $CFG, $USER, $DB;
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->dirroot . '/course/lib.php');
 
-defined('MOODLE_INTERNAL') || die();
+require_login();
 
+global $CFG, $USER, $DB;
 
 $courseid = required_param("courseid", PARAM_INT);
 $component = required_param('component', PARAM_ALPHANUMEXT);
@@ -40,18 +40,18 @@ $itemid = required_param('itemid', PARAM_INT);
 
 // From Create payment API Response.
 $status = required_param('status', PARAM_TEXT);
-$paymentID = required_param('paymentID', PARAM_TEXT);
+$paymentidparam = required_param('paymentID', PARAM_TEXT);
 
 $config = (object)helper::get_gateway_configuration($component, $paymentarea, $itemid, 'bkash');
 $payable = helper::get_payable($component, $paymentarea, $itemid);
 $surcharge = helper::get_gateway_surcharge('bkash');
 
-if($status == 'failure') {
+if ($status == 'failure') {
     // Redirect to frontend url with failure status.
 
     redirect(new moodle_url('/'), get_string('paymentfailed', 'paygw_bkash'));
 
-} else if($status == 'cancel') {
+} else if ($status == 'cancel') {
 
     redirect(new moodle_url('/'), get_string('paymentcancelled', 'paygw_bkash'));
 
@@ -65,19 +65,19 @@ if($status == 'failure') {
         $config->paymentmodes
     );
     // Get response after execute payment API.
-    $response = $bkashhelper->execute_payment($paymentID);
+    $response = $bkashhelper->execute_payment($paymentidparam);
 
     $transactiondata = json_decode($response, true);
 
-    if (array_key_exists("statusCode",$transactiondata) && $transactiondata['statusCode'] != '0000'){
+    if (array_key_exists("statusCode", $transactiondata) && $transactiondata['statusCode'] != '0000') {
         // Redirect to frontend url with failure status.
         // Case for insufficient balance.
         redirect(new moodle_url('/'), get_string('insufficient_balance', 'paygw_bkash'));
-    } else if(array_key_exists("errorCode", $transactiondata)) {
+    } else if (array_key_exists("errorCode", $transactiondata)) {
         // If execute api failed to response.
 
         redirect(new moodle_url('/'), get_string('paymentfailed', 'paygw_bkash'));
-    } else if(array_key_exists("message", $transactiondata)) {
+    } else if (array_key_exists("message", $transactiondata)) {
         redirect(new moodle_url('/'), get_string('paymentfailed', 'paygw_bkash'));
     }
 

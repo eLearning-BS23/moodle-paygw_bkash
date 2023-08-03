@@ -86,21 +86,20 @@ class bkash_helper {
         $this->appkey = $appkey;
         $this->appsecret = $appsecret;
         $this->paymentmodes = $paymentmodes;
-        if($paymentmodes == 'sandbox') {
+        if ($paymentmodes == 'sandbox') {
             $this->apiurl = 'https://tokenized.sandbox.bka.sh/v1.2.0-beta';
         } else {
             $this->apiurl = 'https://tokenized.pay.bka.sh/v1.2.0-beta';
         }
     }
 
-    public function curl_with_body($url,$header,$method,$body_data_json){
-        
+    public function curl_with_body($url, $header, $method, $bodydatajson) {
         $curl = curl_init($this->apiurl.$url);
-        curl_setopt($curl,CURLOPT_HTTPHEADER, $header);
-        curl_setopt($curl,CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($curl,CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl,CURLOPT_POSTFIELDS, $body_data_json);
-        curl_setopt($curl,CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $bodydatajson);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         $response = curl_exec($curl);
         curl_close($curl);
@@ -114,12 +113,12 @@ class bkash_helper {
                 'password:'.$this->password,
                 );
         $body = array(
-            'app_key'=> $this->appkey, 
-            'app_secret'=>$this->appsecret
+            'app_key' => $this->appkey,
+            'app_secret' => $this->appsecret
         );
-        $payload=json_encode($body);
-    
-        $response = $this->curl_with_body('/tokenized/checkout/token/grant',$headers, 'POST', $payload);
+        $payload = json_encode($body);
+
+        $response = $this->curl_with_body('/tokenized/checkout/token/grant', $headers, 'POST', $payload);
 
         $token = json_decode($response)->id_token;
 
@@ -145,24 +144,24 @@ class bkash_helper {
             'amount' => $cost,
             'currency' => 'BDT',
             'intent' => 'sale',
-            'merchantInvoiceNumber' => "Inv".rand(0, 99999999) // We can pass something like orderID. 
+            'merchantInvoiceNumber' => "Inv".rand(0, 99999999) // We can pass something like orderID.
         );
 
-        $payload =json_encode($body);
+        $payload = json_encode($body);
 
-        $response = $this->curl_with_body('/tokenized/checkout/create',$headers,'POST',$payload);
+        $response = $this->curl_with_body('/tokenized/checkout/create', $headers, 'POST', $payload);
 
         return redirect((json_decode($response)->bkashURL));
     }
 
-    public function execute_payment($paymentID) {
-        $headers =$this->auth_headers();
+    public function execute_payment($paymentid) {
+        $headers = $this->auth_headers();
 
         $body = array(
-            'paymentID' => $paymentID
+            'paymentID' => $paymentid
         );
         $payload = json_encode($body);
-        $response = $this->curl_with_body('/tokenized/checkout/execute',$headers,'POST',$payload);
+        $response = $this->curl_with_body('/tokenized/checkout/execute', $headers, 'POST', $payload);
         return $response;
     }
 }
