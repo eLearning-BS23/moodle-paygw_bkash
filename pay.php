@@ -27,6 +27,8 @@ use paygw_bkash\bkash_helper;
 
 require_once(__DIR__ . '/../../../config.php');
 
+require_login();
+
 global $CFG, $USER, $DB;
 
 $component = required_param('component', PARAM_ALPHANUMEXT);
@@ -41,19 +43,6 @@ $config = (object)helper::get_gateway_configuration($component, $paymentarea, $i
 $payable = helper::get_payable($component, $paymentarea, $itemid);
 $surcharge = helper::get_gateway_surcharge('bkash');
 $cost = helper::get_rounded_cost($payable->get_amount(), $payable->get_currency(), $surcharge);
-
-// if($amount == 0) {
-//     $cost = helper::get_rounded_cost($payable->get_amount(), $payable->get_currency(), $surcharge);
-// } else {
-//     if ($DB->record_exists('local_discount_used_coupon', ['used_by' => $userid, 'amount' => $amount])) {
-//         $cost = $amount;
-//     } else {
-//         // Redirect to frontend.
-//         $redirecturl = $config->frontendurl . 'status=3&message=payment_cancelled&paygw=bkash';
-//         header("Location: $redirecturl", true, 301);  
-//         exit(); 
-//     }
-// }
 
 $bkashhelper = new bkash_helper(
     $config->username,

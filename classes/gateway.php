@@ -35,8 +35,7 @@ class gateway extends \core_payment\gateway {
      * @inheritDoc
      */
     public static function get_supported_currencies(): array {
-        return [ 'AUD', 'AED', 'BRL', 'BDT' , 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'ILS', 'INR', 'JPY',
-            'MXN', 'MYR', 'NOK', 'NZD', 'PKR', 'PHP', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'USD'];
+        return ['BDT'];
     }
 
     /**
