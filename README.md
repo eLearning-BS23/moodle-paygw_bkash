@@ -31,7 +31,7 @@ Dashboard / Site administration / Plugins / Payment gateways / Manage payment ga
 
 Enable Bkash plugin 
 
-![enable shurjopay](https://github.com/shadman-ahmed-bs23/laravel-docker-sample/assets/72008371/74ff63d0-6703-4a70-abb5-fb6a4b3d4100)
+![enable shurjopay](https://github.com/eLearning-BS23/moodle-paygw_bkash/assets/72008371/c5eae28c-5807-4815-b74a-2774f551310c)
 
 
 ### Step: 2

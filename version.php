@@ -28,4 +28,4 @@ $plugin->version   = 2023051304;        // The current plugin version (Date: YYY
 $plugin->release   = '1.0.1';
 $plugin->requires  = 2020110900;        // Requires this Moodle version.
 $plugin->component = 'paygw_bkash';    // Full name of the plugin (used for diagnostics).
-$plugin->maturity = MATURITY_BETA;
+$plugin->maturity = MATURITY_STABLE;
